@@ -1,0 +1,29 @@
+{
+  "data": [
+    {
+      "id": 1,
+      "title": "Corporate",
+      "announce": "Campaign or Promotion in procress, Other Notices"
+    },
+    {
+      "id": 2,
+      "title": "Other Notices",
+      "announce": "Notices of new ATM & Brand, or Gold Club Service, Foreign Desk"
+    },
+    {
+      "id": 3,
+      "title": "General",
+      "announce": "SME Center and Socials Coffe"
+    },
+    {
+      "id": 4,
+      "title": "General",
+      "announce": "new mobilePay location"
+    },
+    {
+      "id": 5,
+      "title": "Corporate",
+      "announce": "Merchant promotion (Discount or Event)"
+    }
+  ]
+}
