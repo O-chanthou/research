@@ -23,6 +23,11 @@ const router = createRouter({
       path: '/push-notification',
       name: 'push-noti',
       component: () => import('@/views/push_noti/PushNotiView.vue')
+    },
+    {
+      path: '/manage-approval',
+      name: 'approval',
+      component: () => import('@/views/manage_approval/ManageApprovalView.vue')
     }
   ]
 })

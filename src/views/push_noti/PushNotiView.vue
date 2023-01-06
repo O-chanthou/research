@@ -26,7 +26,10 @@ const submitPushNoti = () => {
     },
     body: JSON.stringify({
       app_id: "9c57d7ba-84db-4a43-8994-99329bed784d",
-      included_segments: ["Subscribed Users"],
+      include_player_ids: ["88f95a88-58c9-412a-baf4-5037226ef2f0"], // push for a user by id
+      // included_segments: ["Subscribed Users"], // push all
+      included_segments: ["include_player_ids"],  // push for a user by id
+      "isAnyWeb": true,
       contents: {
         en: formPush.content,
       },

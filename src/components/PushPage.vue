@@ -27,7 +27,7 @@
       <table style="width: 100%">
         <tr>
           <th>
-            <input type="checkbox" v-model="isAllSelected" @click="selectAll" />
+            <input v-if="dataHeader.length !== 0" type="checkbox" v-model="isAllSelected" @click="selectAll" />
           </th>
           <th v-for="header in dataHeader">{{ header }}</th>
         </tr>
@@ -71,6 +71,8 @@ import { reactive, ref } from "vue";
 import { announceTypes } from "../../data/announce-type";
 import { usePushStore } from "@/stores/storeState";
 import { storeToRefs } from "pinia";
+
+
 let isAllSelected = false;
 let announceId = ref<number[]>([]);
 
