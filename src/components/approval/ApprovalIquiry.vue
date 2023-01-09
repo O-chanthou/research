@@ -11,7 +11,7 @@
 <style scoped>
 .content {
   position: relative;
-  border: 1px solid #000;
+  border: 1px solid  #bdc2d0fe;
   height: 40px;
 } 
 

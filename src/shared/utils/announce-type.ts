@@ -8,3 +8,12 @@ export const announceTypes = [
     "New Function, Customer Survey / Feedback Collection",
     "Campaign or Promotion in progress"
   ]
+
+export interface Approval {
+  no: number;
+  busCate: string;
+  busSubCate: string;
+  authType: string;
+  approvalSteps: number;
+  approvalLine: string;
+}

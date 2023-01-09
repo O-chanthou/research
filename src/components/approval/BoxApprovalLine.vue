@@ -7,7 +7,6 @@
       <div class="approval-line-content">
         <div class="txt-todo">To-do Approval Line </div>
         <Approval />
-        
       </div>
     </div>
 </template>
@@ -15,6 +14,8 @@
 <script setup lang="ts">
 import NewApprover from "./box-approval/NewApprover.vue";
 import Approval from "./box-approval/Approval.vue";
+
+
 </script>
 
 <style scoped>
@@ -29,7 +30,7 @@ import Approval from "./box-approval/Approval.vue";
     /* background: violet; */
     height: 100%;
     width: 30%;
-    border: 1px solid #000;
+    border: 1px solid #bdc2d0fe;
     position: relative;
 }
 .txt-set {
@@ -44,7 +45,7 @@ import Approval from "./box-approval/Approval.vue";
     /* background: yellowgreen; */
     height: 100%;
     width: 70%;
-    border: 1px solid #000;
+    border: 1px solid #bdc2d0fe;
     margin-left: 10px;
     position: relative;
 }

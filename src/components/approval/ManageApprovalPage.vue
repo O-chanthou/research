@@ -4,7 +4,7 @@
       <ApprovalIquiry />
     </div>
     <div class="table-grid">
-      <ApprovalTable />
+      <ApprovalTable @emitTrValue="getEmitValue"/>
     </div>
     <div class="set-approval">
       <BoxApprovalLine />
@@ -25,7 +25,17 @@
 import ApprovalTable from "./ApprovalTable.vue";
 import BoxApprovalLine from "./BoxApprovalLine.vue";
 import ApprovalIquiry from "./ApprovalIquiry.vue";
-import { Close } from "@element-plus/icons-vue";
+import { ref, provide } from "vue";
+import type { Approval } from "@/shared/utils/announce-type";
+
+let newValue = ref<Approval>() ;
+
+const getEmitValue = (val: Approval) => {
+  newValue.value = val
+}
+
+provide('proValue', newValue)
+
 </script>
 
 <style scoped>

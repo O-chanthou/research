@@ -1,7 +1,7 @@
 <template>
   <div class="table-grid">
     <el-table
-      :data="tableData"
+      :data="dataApprovalLine"
       height="300"
       :border="true"
       fit
@@ -23,45 +23,22 @@
 </template>
 
 <script setup lang="ts">
+import type { Approval } from "@/shared/utils/announce-type.js";
 import { ref } from "vue";
+import { usePushStore } from "@/stores/storeState";
+import { storeToRefs } from "pinia";
 
 const currentRow = ref();
+const emit = defineEmits<{
+  (event: 'emitTrValue', val: Approval): Approval,
+}>()
 
-interface Approval {
-  no: number;
-  busCate: string;
-  busSubCate: string;
-  authType: string;
-  approvalSteps: number;
-  approvalLine: string;
-}
+const pushStore = usePushStore()
 
-const tableData = <Approval[]>([
-  {
-    no: 1,
-    busCate: "02:Loan",
-    busSubCate: "0210:Loan Application",
-    authType: "Loan Application - Branch Authorization",
-    approvalSteps: 2,
-    approvalLine: "RM-->BGM-->CO-->BCM",
-  },
-  {
-    no: 2,
-    busCate: "02:Loan",
-    busSubCate: "0210:Loan Application",
-    authType: "Loan Application - CM Authorization",
-    approvalSteps: 3,
-    approvalLine: "RM-->BGM-->CO-->BCM-->DCM-->CM",
-  },
-  {
-    no: 3,
-    busCate: "02:Loan",
-    busSubCate: "0210:Loan Application",
-    authType: "Loan Application - Screen Dept Authorization",
-    approvalSteps: 5,
-    approvalLine: "RM-->BGM-->CO-->BCM-->DCM-->CSO",
-  },
-]);
+pushStore.fetchDataApproval()
+
+const { dataApprovalLine } = storeToRefs(pushStore)
+
 
 const elTableColumns = [
   {
@@ -102,16 +79,17 @@ const elTableColumns = [
   },
 ];
 
-const handleCurrentChange = (val: Approval | undefined) => {
-  currentRow.value = val;
-  console.log(currentRow.value);
+function handleCurrentChange(val: Approval) {
+  console.log(val);
+  
+  emit('emitTrValue', val)
 };
 
 </script>
 
 <style scoped>
 .table-grid {
-  border: 1px solid #000;
+  border: 1px solid #bdc2d0fe;
   margin-top: 10px;
 }
 </style>

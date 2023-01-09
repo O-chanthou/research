@@ -68,7 +68,7 @@
 
 <script setup lang="ts">
 import { reactive, ref } from "vue";
-import { announceTypes } from "../../data/announce-type";
+import { announceTypes } from "../shared/utils/announce-type";
 import { usePushStore } from "@/stores/storeState";
 import { storeToRefs } from "pinia";
 

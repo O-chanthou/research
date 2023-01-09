@@ -1,8 +1,8 @@
 <template>
   <div class="container">
-    <div class="form-approval" v-for="i in 3">
+    <div class="form-approval" v-for="pro in getProValue?.approvalSteps">
       <div class="txt-approval">
-        <h3>Approval {{i}}</h3>
+        <h3>Approval {{ pro }}</h3>
         <div>
             <el-button :icon="Close" color="red" />
         </div>
@@ -15,59 +15,47 @@
       size="small"
       label-position="left"
     >
-      <el-form-item label="Branch Type" prop="region" >
-        <el-select v-model="ruleForm.region" placeholder="Activity zone" style="width: 100%;" >
-          <el-option label="Zone one" value="shanghai" />
-          <el-option label="Zone two" value="beijing" />
+      <el-form-item label="Branch Type" prop="branchType" >
+        <el-select v-model="ruleForm.branchType" placeholder="Branch Type" style="width: 100%;" >
+          <el-option  v-for="(item, index) in createApprovalData.branchType" :label="item.type" :value="item.type" />
         </el-select>
       </el-form-item>
   
-      <el-form-item label="Role" prop="count" placeholder="Activity zone"> 
+      <!-- <el-form-item label="Role" prop="role" placeholder="Role"> 
         <el-select-v2
-          v-model="ruleForm.count"
+          v-model="ruleForm.role"
           placeholder="Role"
-          :options="options"
-        />
-      </el-form-item>
+          />
+          <el-option v-for="item in createApprovalData.branchType"  :label="item.type" :value="item.type" />
+      </el-form-item> -->
   
-      <el-form-item class="mandatory" label="Mandatory" prop="resource">
-        <el-radio-group v-model="ruleForm.resource">
+      <el-form-item class="mandatory" label="Mandatory" prop="mandatory">
+        <el-radio-group v-model="ruleForm.mandatory">
           <el-radio label="Yes" />
           <el-radio label="No" />
         </el-radio-group>
       </el-form-item>
     </el-form>
-    </div>
+  </div>
   </div>
   </template>
   
   <script lang="ts" setup>
-  import { reactive, ref } from "vue";
+  import { reactive, ref, inject } from "vue";
   import type { FormInstance } from "element-plus";
   import { Close } from '@element-plus/icons-vue'
+  import type { Approval } from "@/shared/utils/announce-type";
+  import { createApprovalData } from "@/shared/utils/create-approval";
 
   const ruleFormRef = ref<FormInstance>();
   const ruleForm = reactive({
-    region: "",
-    count: "",
-    resource: "",
+    branchType: [],
+    role: "",
+    mandatory: "",
   });
-  
-  const submitForm = async (formEl: FormInstance | undefined) => {
-    if (!formEl) return;
-    await formEl.validate((valid, fields) => {
-      if (valid) {
-        console.log("submit!");
-      } else {
-        console.log("error submit!", fields);
-      }
-    });
-  };
-  
-  const options = Array.from({ length: 10000 }).map((_, idx) => ({
-    value: `${idx + 1}`,
-    label: `${idx + 1}`,
-  }));
+   
+  const getProValue: Approval | undefined = inject('proValue')
+
   </script>
   
   <style scoped>
@@ -77,7 +65,7 @@
   .form-approval {
       /* height: 35%; */
       width: 28%;
-      border: 1px solid #000;
+      border: 1px solid #bdc2d0fe;
       margin: 10px;
       display: flex;
       justify-content: center;
