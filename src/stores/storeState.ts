@@ -46,7 +46,6 @@ export const usePushStore = defineStore("push", {
       this.announceData = search
       return this.announceData
     },
-
     /////////// fetch data Manage Approval ///////////////
     async fetchDataApproval() {
       const res = await fetch('http://localhost:3000/dataApprovalLine')

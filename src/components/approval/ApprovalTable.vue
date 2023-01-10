@@ -24,11 +24,9 @@
 
 <script setup lang="ts">
 import type { Approval } from "@/shared/utils/announce-type.js";
-import { ref } from "vue";
 import { usePushStore } from "@/stores/storeState";
 import { storeToRefs } from "pinia";
 
-const currentRow = ref();
 const emit = defineEmits<{
   (event: 'emitTrValue', val: Approval): Approval,
 }>()

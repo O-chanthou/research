@@ -14,7 +14,7 @@
               "mandatory": true
             },
             {
-              "branchType": "01:Branch",
+              "branchType": "02:Head Office",
               "role": "120200:BGM",
               "mandatory": true
             }

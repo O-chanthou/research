@@ -16,4 +16,11 @@ export interface Approval {
   authType: string;
   approvalSteps: number;
   approvalLine: string;
+  approvalList: [
+    {
+      branchType: string,
+      role: string,
+      mandatory: boolean
+    },
+  ]
 }
