@@ -9,14 +9,16 @@
           "approvalLine": "RM-->BGM",
           "approvalList": [
             {
+              "id": 1,
               "branchType": "01:Branch",
               "role": "110200:RM",
-              "mandatory": true
+              "mandatory": 1
             },
             {
+              "id": 2,
               "branchType": "02:Head Office",
               "role": "120200:BGM",
-              "mandatory": true
+              "mandatory": 0
             }
           ]
         },
@@ -29,19 +31,22 @@
           "approvalLine": "RM-->BGM-->CO",
           "approvalList": [
             {
+              "id": 1,
               "branchType": "01:Branch",
               "role": "110200:RM",
-              "mandatory": true
+              "mandatory": 1
             },
             {
+              "id": 2,
               "branchType": "01:Branch",
               "role": "120200:BGM",
-              "mandatory": true
+              "mandatory": 0
             },
             {
+              "id": 3,
               "branchType": "02:Head Office",
               "role": "200300:CO",
-              "mandatory": true
+              "mandatory": 1
             }
           ]
         },
@@ -54,29 +59,34 @@
           "approvalLine": "RM-->BGM-->CO-->BCM-->DCM",
           "approvalList": [
             {
+              "id": 1,
               "branchType": "01:Branch",
               "role": "110200:RM",
-              "mandatory": true
+              "mandatory": 1
             },
             {
+              "id": 2,
               "branchType": "01:Branch",
               "role": "120200:BGM",
-              "mandatory": true
+              "mandatory": 1
             },
             {
+              "id": 3,
               "branchType": "02:Head Office",
               "role": "200300:CO",
-              "mandatory": true
+              "mandatory": 0
             },
             {
+              "id": 4,
               "branchType": "02:Head Office",
               "role": "110300:BCM",
-              "mandatory": true
+              "mandatory": 1
             },
             {
+              "id": 5,
               "branchType": "02:Head Office",
               "role": "200400:DCM",
-              "mandatory": true
+              "mandatory": 0
             }
           ]
         }

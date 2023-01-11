@@ -4,7 +4,7 @@
       <ApprovalIquiry />
     </div>
     <div class="table-grid">
-      <ApprovalTable @emitTrValue="getEmitValue"/>
+      <ApprovalTable @emitTrValue="getEmitTrValue" @emitMandatory="getEmitManVal"/>
     </div>
     <div class="set-approval">
       <BoxApprovalLine />
@@ -22,19 +22,27 @@
 </template>
 
 <script lang="ts" setup>
-import ApprovalTable from "./ApprovalTable.vue";
-import BoxApprovalLine from "./BoxApprovalLine.vue";
-import ApprovalIquiry from "./ApprovalIquiry.vue";
-import { ref, provide } from "vue";
+import { ref, provide, defineAsyncComponent } from "vue";
 import type { Approval } from "@/shared/utils/announce-type";
 
-let newValue = ref<Approval>() ;
+import ApprovalIquiry from "./ApprovalIquiry.vue";
+import ApprovalTable from "./ApprovalTable.vue";
+const BoxApprovalLine = defineAsyncComponent(() => import('./BoxApprovalLine.vue'))
 
-const getEmitValue = (val: Approval) => {
-  newValue.value = val
+const trValue = ref<Approval>();
+let arrMandatory = ref<string[]>([]);
+
+const getEmitTrValue = (val: Approval) => {
+  trValue.value = val
+  console.log(trValue.value);
 }
 
-provide('proValue', newValue)
+const getEmitManVal = (val: string[]) => {
+  arrMandatory.value = val
+  console.log(arrMandatory.value);
+}
+provide('proValue', trValue)
+provide('arrMandatory', arrMandatory)
 
 </script>
 

@@ -1,30 +1,30 @@
 <template>
+  {{ getProValue?.approvalList.length }}
   <div class="container">
     <div
       class="form-approval"
-      v-for="(pro, index) in getProValue?.approvalList.length"
+      v-for="(pro, index) in dataApproval?.approvalList"
     >
       <div class="txt-approval">
-        <h3>Approval {{ pro }}</h3>
+        <h3>Approval {{ index+1 }}</h3>
         <div>
-          <el-button :icon="Close" color="red" />
+          <el-button :icon="Close" color="red" @click="btnRemoveApproval(dataApproval.approvalList[index].id)" />
         </div>
       </div>
 
       <el-form
-        ref="ruleFormRef"
-        :model="ruleForm"
+        ref="approvalFormRef"
+        :model="approvalForm"
         label-width="100px"
-        class="demo-ruleForm"
         size="small"
         label-position="left"
       >
 
         <el-form-item label="Branch Type">
           <el-select
-            v-model="ruleForm.branchType[index]"
+            v-model="approvalForm.branchType[index]"
             :placeholder="
-              ruleForm.branchType[index] == ''
+              approvalForm.branchType[index] == ''
                 ? 'Select Branch Type'
                 : getProValue?.approvalList[index].branchType
             "
@@ -40,8 +40,8 @@
 
         <el-form-item label="Role">
           <el-select
-            v-model="ruleForm.role[index]"
-            :placeholder="ruleForm.role[index] == '' ? 'Select role' : getProValue?.approvalList[index].role"
+            v-model="approvalForm.role[index]"
+            :placeholder="approvalForm.role[index] == '' ? 'Select role' : getProValue?.approvalList[index].role"
             clearable
           >
             <el-option
@@ -53,18 +53,16 @@
         </el-form-item>
 
         <el-form-item class="mandatory" label="Mandatory">
-          <el-radio-group v-model="ruleForm.mandatory[index]">
+          <el-radio-group v-model="approvalForm.mandatory[index]">
             <el-radio label="Yes" />
             <el-radio label="No" />
           </el-radio-group>
         </el-form-item>
-
       </el-form>
     </div>
   </div>
-
-  {{ ruleForm }}
-  <button @click="getMandatory">click</button>
+  {{ dataApproval?.approvalList }}
+  {{ dataNewApprover }}
 </template>
 
 <script lang="ts" setup>
@@ -73,25 +71,26 @@ import type { FormInstance } from "element-plus";
 import { Close } from "@element-plus/icons-vue";
 import type { Approval } from "@/shared/utils/announce-type";
 import { createApprovalData } from "@/shared/utils/create-approval";
+import type { CreateApprovalData } from "@/shared/utils/approval-interface";
 
-const getProValue: Approval | undefined = inject("proValue");
+const getProValue = inject('proValue') as Approval;
+const dataApproval = ref(getProValue)
+const getArrMandatory = inject('arrMandatory') as string[];
+const getNewApprover = inject('proNewApprover') as CreateApprovalData;
+const dataNewApprover = ref(getNewApprover)
 
-const ruleFormRef = ref<FormInstance>();
-const ruleForm = reactive({
-  branchType: [],
-  role: [],
-  mandatory: [],
+const approvalFormRef = ref<FormInstance>();
+
+const approvalForm = reactive({
+  branchType: [] as string[],
+  role: [] as string[],
+  mandatory: getArrMandatory
 });
 
+const btnRemoveApproval = (id: number) => {
+  dataApproval.value.approvalList = dataApproval.value.approvalList.filter(item => item.id !== id)
+}
 
-const getMandatory = async () => {
-  console.log(getProValue);
-  
-  // getProValue?.approvalList.forEach((res) => {
-  //   console.log(res.mandatory);
-    
-  // })
-} 
 </script>
 
 <style scoped>

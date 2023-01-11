@@ -3,7 +3,6 @@ import type { announceData } from "@/shared/utils/announceType.interface";
 import type { Approval } from "@/shared/utils/announce-type";
 
 const announceDatas: announceData[] = [];
-
 const dataApprovalLines: Approval[] = [];
 
 interface formSearch {
@@ -16,7 +15,9 @@ export const usePushStore = defineStore("push", {
     announceData: announceDatas,
     dataApprovalLine: dataApprovalLines,
   }),
-  getters: {},
+  getters: {
+
+  },
   actions: {
     async fetchAnnounceType() {
       const res = await fetch("http://localhost:3000/data");

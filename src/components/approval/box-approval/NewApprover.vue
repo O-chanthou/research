@@ -4,15 +4,15 @@
       <h3>New Approver</h3>
     </div>
     <el-form
-      ref="ruleFormRef"
-      :model="ruleForm"
+      ref="newApproverRef"
+      :model="newApproverForm"
       :rules="rules"
       label-width="100px"
       size="small"
       label-position="left"
     >
       <el-form-item label="Branch Type" prop="branchType">
-        <el-select v-model="ruleForm.branchType" placeholder="Branch Type">
+        <el-select v-model="newApproverForm.branchType" placeholder="Branch Type">
           <el-option
             v-for="item in createApprovalData.branchType"
             :label="item.type"
@@ -22,7 +22,7 @@
       </el-form-item>
 
       <el-form-item label="Role" prop="role">
-        <el-select v-model="ruleForm.role" placeholder="Role">
+        <el-select v-model="newApproverForm.role" placeholder="Role">
           <el-option
             v-for="item in createApprovalData.role"
             :label="item.type"
@@ -32,39 +32,38 @@
       </el-form-item>
 
       <el-form-item class="mandatory" label="Mandatory" prop="mandatory">
-        <el-radio-group required="true" v-model="ruleForm.mandatory">
+        <el-radio-group required="true" v-model="newApproverForm.mandatory">
           <el-radio label="Yes" />
           <el-radio label="No" />
         </el-radio-group>
 
-        <el-button @click="btnAdd(ruleFormRef)"> Add </el-button>
+        <el-button @click="btnAdd(newApproverRef)"> Add </el-button>
       </el-form-item>
+
     </el-form>
-    {{ ruleFormOvbj }}
+    {{ newApproverOvbj }}
   </div>
 </template>
 
 <script lang="ts" setup>
 import { reactive, ref } from "vue";
 import type { FormInstance, FormRules } from "element-plus";
-import { inject } from "vue";
 import { createApprovalData } from "@/shared/utils/create-approval";
+import type { CreateApprovalData } from "@/shared/utils/approval-interface";
 
-const ruleFormRef = ref<FormInstance>();
+const newApproverRef = ref<FormInstance>();
+const emits = defineEmits(['emitAddNewApprover'])
 
-const ruleForm = reactive<RuleForm>({
+
+const newApproverForm = reactive<CreateApprovalData>({
+  id: 0,
   branchType: "",
   role: "",
   mandatory: "",
 });
 
-const ruleFormOvbj = ref<RuleForm[]>([]);
+const newApproverOvbj = ref<CreateApprovalData[]>([]);
 
-interface RuleForm {
-  branchType: string;
-  role: string;
-  mandatory: string;
-}
 
 const rules = reactive<FormRules>({
   branchType: [
@@ -90,28 +89,35 @@ const rules = reactive<FormRules>({
   ],
 });
 
-const getProValue = inject("proValue");
-
 const btnAdd = async (formEl: FormInstance | undefined) => {
+  
   if (!formEl) return;
   await formEl.validate((valid, fields) => {
+    
     if (valid) {
       console.log("submit!");
-      if (ruleForm.mandatory === "Yes") {
-        ruleForm.mandatory = "1";
+      if (newApproverForm.mandatory === "Yes") {
+        newApproverForm.mandatory = "1";
       } else {
-        ruleForm.mandatory = "0";
+        newApproverForm.mandatory = "0";
       }
-      console.log(ruleForm);
-      let tmp: RuleForm = {
+
+      let date = Date()
+      let id = Date.parse(date)
+
+      let tmp: CreateApprovalData = {
+        id: id,
         branchType: "",
         role: "",
         mandatory: "",
       };
-      tmp.branchType = ruleForm.branchType;
-      tmp.role = ruleForm.role;
-      tmp.mandatory = ruleForm.mandatory;
-      ruleFormOvbj.value.push(tmp);
+
+      tmp.branchType = newApproverForm.branchType;
+      tmp.role = newApproverForm.role;
+      tmp.mandatory = newApproverForm.mandatory;
+
+      newApproverOvbj.value.push(tmp);
+      emits('emitAddNewApprover', tmp)
       formEl.resetFields();
     } else {
       console.log("error submit!", fields);

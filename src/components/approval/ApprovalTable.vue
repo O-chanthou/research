@@ -27,8 +27,9 @@ import type { Approval } from "@/shared/utils/announce-type.js";
 import { usePushStore } from "@/stores/storeState";
 import { storeToRefs } from "pinia";
 
-const emit = defineEmits<{
+const emits = defineEmits<{
   (event: 'emitTrValue', val: Approval): Approval,
+  (event: 'emitMandatory', val: string[]): string[]
 }>()
 
 const pushStore = usePushStore()
@@ -36,7 +37,6 @@ const pushStore = usePushStore()
 pushStore.fetchDataApproval()
 
 const { dataApprovalLine } = storeToRefs(pushStore)
-
 
 const elTableColumns = [
   {
@@ -78,9 +78,17 @@ const elTableColumns = [
 ];
 
 function handleCurrentChange(val: Approval) {
-  console.log(val);
-  
-  emit('emitTrValue', val)
+  let arrMandatory = [] as string[];
+  val.approvalList.forEach(item => {
+    if (item.mandatory === 1) {
+      arrMandatory.push('Yes')
+    } else {    
+      arrMandatory.push('No')
+    }
+  })
+
+  emits('emitTrValue', val)
+  emits("emitMandatory", arrMandatory)
 };
 
 </script>

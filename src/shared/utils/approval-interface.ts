@@ -1,6 +1,9 @@
 
-export interface CreateApprovalData {
-    branchType: object[],
-    role: object[],
-    mandatory: boolean
+interface CreateApprovalData {
+    id: number
+    branchType: string,
+    role: string,
+    mandatory: number | string
 }
+
+export type { CreateApprovalData };

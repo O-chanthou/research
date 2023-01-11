@@ -2,7 +2,7 @@
     <div class="approval-box">
       <div class="new-approver-content">
        <div class="txt-set">Set To-do Approval Line</div>
-        <NewApprover />
+        <NewApprover @emitAddNewApprover="getEmitAddNewApproverData"/>
       </div>
       <div class="approval-line-content">
         <div class="txt-todo">To-do Approval Line </div>
@@ -12,9 +12,19 @@
 </template>
 
 <script setup lang="ts">
-import NewApprover from "./box-approval/NewApprover.vue";
-import Approval from "./box-approval/Approval.vue";
+import { defineAsyncComponent, ref, provide } from "vue";
+import type { CreateApprovalData } from "@/shared/utils/approval-interface";
+const Approval = defineAsyncComponent(() => import('./box-approval/Approval.vue'));
+const NewApprover = defineAsyncComponent(() => import('./box-approval/NewApprover.vue'));
 
+const newApprover = ref<CreateApprovalData>();
+
+const getEmitAddNewApproverData = (data: CreateApprovalData) => {
+    newApprover.value = data
+    console.log(newApprover.value);
+}
+
+provide('proNewApprover', newApprover)
 
 </script>
 
