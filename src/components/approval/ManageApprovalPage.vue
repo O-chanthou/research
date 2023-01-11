@@ -23,10 +23,10 @@
 
 <script lang="ts" setup>
 import { ref, provide, defineAsyncComponent } from "vue";
-import type { Approval } from "@/shared/utils/announce-type";
 
 import ApprovalIquiry from "./ApprovalIquiry.vue";
 import ApprovalTable from "./ApprovalTable.vue";
+import type { Approval } from "@/shared/utils/approval/approval-interface";
 const BoxApprovalLine = defineAsyncComponent(() => import('./BoxApprovalLine.vue'))
 
 const trValue = ref<Approval>();
@@ -34,12 +34,10 @@ let arrMandatory = ref<string[]>([]);
 
 const getEmitTrValue = (val: Approval) => {
   trValue.value = val
-  console.log(trValue.value);
 }
 
 const getEmitManVal = (val: string[]) => {
   arrMandatory.value = val
-  console.log(arrMandatory.value);
 }
 provide('proValue', trValue)
 provide('arrMandatory', arrMandatory)

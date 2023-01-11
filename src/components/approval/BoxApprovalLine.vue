@@ -13,7 +13,7 @@
 
 <script setup lang="ts">
 import { defineAsyncComponent, ref, provide } from "vue";
-import type { CreateApprovalData } from "@/shared/utils/approval-interface";
+import type { CreateApprovalData } from "@/shared/utils/approval/approval-interface";
 const Approval = defineAsyncComponent(() => import('./box-approval/Approval.vue'));
 const NewApprover = defineAsyncComponent(() => import('./box-approval/NewApprover.vue'));
 
@@ -21,7 +21,6 @@ const newApprover = ref<CreateApprovalData>();
 
 const getEmitAddNewApproverData = (data: CreateApprovalData) => {
     newApprover.value = data
-    console.log(newApprover.value);
 }
 
 provide('proNewApprover', newApprover)

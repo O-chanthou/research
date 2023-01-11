@@ -2,7 +2,7 @@
   <div class="table-grid">
     <el-table
       :data="dataApprovalLine"
-      height="300"
+      height="250"
       :border="true"
       fit
       stripe
@@ -20,65 +20,38 @@
       />
     </el-table>
   </div>
+  <!-- {{ dd }} -->
 </template>
 
 <script setup lang="ts">
-import type { Approval } from "@/shared/utils/announce-type.js";
+import type { Approval } from "@/shared/utils/approval/approval-interface.js";
 import { usePushStore } from "@/stores/storeState";
 import { storeToRefs } from "pinia";
-
+import { elTableColumns } from "@/shared/utils/announce/announce-type.js"
+import { ref } from "vue";
+ 
 const emits = defineEmits<{
   (event: 'emitTrValue', val: Approval): Approval,
   (event: 'emitMandatory', val: string[]): string[]
 }>()
 
-const pushStore = usePushStore()
+const pushStore = usePushStore() 
+const { dataApprovalLineOri, dataApprovalLine } = storeToRefs(pushStore)
+const { fetchDataApproval, getTrData, getMandatory } = pushStore
 
-pushStore.fetchDataApproval()
+const dd = ref<Approval[]>([]);
 
-const { dataApprovalLine } = storeToRefs(pushStore)
+fetchDataApproval().then((res) => {
+  if (dd.value.length === 0) {
+    dd.value = res
+  }
+  
+  console.log(dd.value);
+})
 
-const elTableColumns = [
-  {
-    prop: "no",
-    label: "No",
-    width: 50,
-    align: "center",
-  },
-  {
-    prop: "busCate",
-    label: "Business Category",
-    width: 140,
-    align: "center",
-  },
-  {
-    prop: "busSubCate",
-    label: "Business Sub Category",
-    width: 200,
-    align: "center",
-  },
-  {
-    prop: "authType",
-    label: "Authority Type",
-    // width: 280,
-    align: "center",
-  },
-  {
-    prop: "approvalSteps",
-    label: "Approval Steps",
-    width: 110,
-    align: "center",
-  },
-  {
-    prop: "approvalLine",
-    label: "Approval Line",
-    // width: 180,
-    align: "center",
-  },
-];
-
-function handleCurrentChange(val: Approval) {
+function handleCurrentChange(val: Approval) { 
   let arrMandatory = [] as string[];
+  
   val.approvalList.forEach(item => {
     if (item.mandatory === 1) {
       arrMandatory.push('Yes')
@@ -86,9 +59,15 @@ function handleCurrentChange(val: Approval) {
       arrMandatory.push('No')
     }
   })
-
+  console.log('val', val);
+  if () {
+    
+  }
   emits('emitTrValue', val)
   emits("emitMandatory", arrMandatory)
+  
+  getTrData(val)
+  getMandatory(arrMandatory)
 };
 
 </script>

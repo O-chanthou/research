@@ -1,14 +1,13 @@
 <template>
-  {{ getProValue?.approvalList.length }}
   <div class="container">
     <div
       class="form-approval"
-      v-for="(pro, index) in dataApproval?.approvalList"
+      v-for="(pro, index) in dataTrApproval?.approvalList"
     >
       <div class="txt-approval">
         <h3>Approval {{ index+1 }}</h3>
         <div>
-          <el-button :icon="Close" color="red" @click="btnRemoveApproval(dataApproval.approvalList[index].id)" />
+          <el-button :icon="Close" color="red" @click="removeApprovalLine(dataTrApproval.approvalList[index].id)" />
         </div>
       </div>
 
@@ -26,7 +25,7 @@
             :placeholder="
               approvalForm.branchType[index] == ''
                 ? 'Select Branch Type'
-                : getProValue?.approvalList[index].branchType
+                : dataTrApproval?.approvalList[index].branchType
             "
             clearable
           >
@@ -41,7 +40,7 @@
         <el-form-item label="Role">
           <el-select
             v-model="approvalForm.role[index]"
-            :placeholder="approvalForm.role[index] == '' ? 'Select role' : getProValue?.approvalList[index].role"
+            :placeholder="approvalForm.role[index] == '' ? 'Select role' : dataTrApproval?.approvalList[index].role"
             clearable
           >
             <el-option
@@ -61,17 +60,21 @@
       </el-form>
     </div>
   </div>
-  {{ dataApproval?.approvalList }}
-  {{ dataNewApprover }}
+  {{ dataApproval }}
 </template>
 
 <script lang="ts" setup>
 import { reactive, ref, inject } from "vue";
 import type { FormInstance } from "element-plus";
 import { Close } from "@element-plus/icons-vue";
-import type { Approval } from "@/shared/utils/announce-type";
-import { createApprovalData } from "@/shared/utils/create-approval";
-import type { CreateApprovalData } from "@/shared/utils/approval-interface";
+import { createApprovalData } from "@/shared/utils/approval/create-approval";
+import { usePushStore } from "@/stores/storeState";
+import { storeToRefs } from "pinia";
+import type { Approval, CreateApprovalData } from "@/shared/utils/approval/approval-interface";
+
+const pushStore = usePushStore()
+const { dataTrApproval, arrMandatory } = storeToRefs(pushStore)
+const { removeApprovalLine } = pushStore
 
 const getProValue = inject('proValue') as Approval;
 const dataApproval = ref(getProValue)
@@ -80,22 +83,19 @@ const getNewApprover = inject('proNewApprover') as CreateApprovalData;
 const dataNewApprover = ref(getNewApprover)
 
 const approvalFormRef = ref<FormInstance>();
-
 const approvalForm = reactive({
   branchType: [] as string[],
   role: [] as string[],
-  mandatory: getArrMandatory
+  mandatory: arrMandatory
 });
-
-const btnRemoveApproval = (id: number) => {
-  dataApproval.value.approvalList = dataApproval.value.approvalList.filter(item => item.id !== id)
-}
 
 </script>
 
 <style scoped>
 .container {
   display: flex;
+  width: 100%;
+  flex-wrap: wrap;
 }
 .form-approval {
   /* height: 35%; */
