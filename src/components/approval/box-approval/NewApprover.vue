@@ -37,7 +37,7 @@
           <el-radio label="No" />
         </el-radio-group>
 
-        <el-button @click="btnAdd(newApproverRef)"> Add </el-button>
+        <el-button :disabled="!isModified" @click="btnAdd(newApproverRef)"> Add </el-button>
       </el-form-item>
 
     </el-form>
@@ -54,26 +54,22 @@ import { usePushStore } from "@/stores/storeState";
 import { storeToRefs } from "pinia";
 
 const newApproverRef = ref<FormInstance>();
-const emits = defineEmits(['emitAddNewApprover'])
 const pushStore = usePushStore()
-const {  } = storeToRefs(pushStore)
+const { isSelectesTr, isModified } = storeToRefs(pushStore)
 const { addNewApprover } = pushStore
 
 const newApproverForm = reactive<CreateApprovalData>({
   id: 0,
   branchType: "",
   role: "",
-  mandatory: "",
+  mandatory: "No",
 });
-
-const newApproverOvbj = ref<CreateApprovalData[]>([]);
 
 const btnAdd = async (formEl: FormInstance | undefined) => {
   if (!formEl) return;
   await formEl.validate((valid, fields) => {
     
     if (valid) {
-      console.log("submit!");
       let date = Date()
       let id = Date.parse(date)
 
@@ -87,10 +83,7 @@ const btnAdd = async (formEl: FormInstance | undefined) => {
       tmp.branchType = newApproverForm.branchType;
       tmp.role = newApproverForm.role;
       tmp.mandatory = newApproverForm.mandatory;
-      console.log(tmp);
       
-      newApproverOvbj.value.push(tmp);
-      emits('emitAddNewApprover', tmp)
       addNewApprover(tmp)
       formEl.resetFields();
     } else {

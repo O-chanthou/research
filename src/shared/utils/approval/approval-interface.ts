@@ -3,7 +3,7 @@ interface CreateApprovalData {
     id: number
     branchType: string,
     role: string,
-    mandatory: string
+    mandatory: string | number  
 }
 
 interface Approval {

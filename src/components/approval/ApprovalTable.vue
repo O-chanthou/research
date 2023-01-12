@@ -1,7 +1,7 @@
 <template>
   <div class="table-grid">
     <el-table
-      :data="dataApprovalLine"
+      :data="dataTableApprovalLine"
       height="250"
       :border="true"
       fit
@@ -20,38 +20,24 @@
       />
     </el-table>
   </div>
-  <!-- {{ dd }} -->
 </template>
 
 <script setup lang="ts">
-import type { Approval } from "@/shared/utils/approval/approval-interface.js";
+import type { Approval, CreateApprovalData } from "@/shared/utils/approval/approval-interface";
 import { usePushStore } from "@/stores/storeState";
 import { storeToRefs } from "pinia";
-import { elTableColumns } from "@/shared/utils/announce/announce-type.js"
-import { ref } from "vue";
- 
-const emits = defineEmits<{
-  (event: 'emitTrValue', val: Approval): Approval,
-  (event: 'emitMandatory', val: string[]): string[]
-}>()
+import { elTableColumns } from "@/shared/utils/announce/announce-type"
 
 const pushStore = usePushStore() 
-const { dataApprovalLineOri, dataApprovalLine } = storeToRefs(pushStore)
+const { dataTableApprovalLine } = storeToRefs(pushStore)
 const { fetchDataApproval, getTrData, getMandatory } = pushStore
 
-const dd = ref<Approval[]>([]);
-
-fetchDataApproval().then((res) => {
-  if (dd.value.length === 0) {
-    dd.value = res
-  }
-  
-  console.log(dd.value);
-})
+fetchDataApproval()
 
 function handleCurrentChange(val: Approval) { 
   let arrMandatory = [] as string[];
-  
+  let arrApprovalLine = [] as CreateApprovalData[];
+
   val.approvalList.forEach(item => {
     if (item.mandatory === 1) {
       arrMandatory.push('Yes')
@@ -59,14 +45,12 @@ function handleCurrentChange(val: Approval) {
       arrMandatory.push('No')
     }
   })
-  console.log('val', val);
-  if () {
-    
-  }
-  emits('emitTrValue', val)
-  emits("emitMandatory", arrMandatory)
   
-  getTrData(val)
+  val.approvalList.forEach(item => {
+    arrApprovalLine.push(item);
+  })
+  
+  getTrData(arrApprovalLine)
   getMandatory(arrMandatory)
 };
 

@@ -3,14 +3,14 @@ import type { announceData, formSearch } from "@/shared/utils/announce/announceT
 import type { Approval, CreateApprovalData } from "@/shared/utils/approval/approval-interface";
 
 
-
 export const usePushStore = defineStore("push", {
   state: () => ({
     announceData: [] as announceData[],
-    dataApprovalLineOri: {} as Approval[],
-    dataApprovalLine: [] as Approval[],
-    dataTrApproval: {} as Approval,
-    arrMandatory: [] as string[],
+    dataTableApprovalLine: [] as Approval[],
+    approvalList: [] as CreateApprovalData[],
+    arrMandatory: [] as (string | number)[],
+    isSelectesTr: false,
+    isModified: false
   }),
   getters: {},
   actions: {
@@ -48,21 +48,13 @@ export const usePushStore = defineStore("push", {
     async fetchDataApproval() {
       const res = await fetch('http://localhost:3000/dataApprovalLine')
       const data = await res.json();
-      this.dataApprovalLineOri = data
-      this.dataApprovalLine = data
-      return data
+      this.dataTableApprovalLine = data
     },
 
     ////////// get a row data from table
-    getTrData(data: Approval) {
-      this.dataApprovalLineOri.forEach(item => {
-        if (item.no === data.no) {
-          console.log('item', item);
-          
-          this.dataTrApproval = item
-          console.log(this.dataTrApproval);
-       }
-      })
+    getTrData(data: CreateApprovalData[]) {
+      this.isSelectesTr = true
+      this.approvalList = data
     },
     getMandatory(data: string[]) {
       return this.arrMandatory = data
@@ -71,10 +63,10 @@ export const usePushStore = defineStore("push", {
     ///////// add new approver to approval line
     addNewApprover(data: CreateApprovalData) {
       this.arrMandatory.push(data.mandatory)
-      this.dataTrApproval.approvalList.push(data)
+      this.approvalList.push(data)
     },
     removeApprovalLine(id: number) {
-      this.dataTrApproval.approvalList = this.dataTrApproval.approvalList.filter(item => item.id !== id)
+      this.approvalList = this.approvalList.filter(item => item.id !== id)
     }
   },
 });
