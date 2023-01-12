@@ -10,7 +10,7 @@
           <el-button disabled :icon="Close" color="red" @click="removeApprovalLine(pro.id)" />
         </div>
       </div>
-
+     
       <el-form
         ref="approvalFormRef"
         :model="approvalForm"
