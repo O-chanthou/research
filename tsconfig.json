@@ -8,7 +8,7 @@
     },
     "types": ["element-plus/global"]
   },
-
+  "lib": ["es2017.object"],
   "references": [
     {
       "path": "./tsconfig.config.json"

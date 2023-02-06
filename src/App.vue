@@ -2,8 +2,9 @@
   <header>
     <div class="wrapper">
       <nav>
+        <RouterLink :to="{ name: 'vuex' }">Vuex V4</RouterLink> |
         <RouterLink :to="{ name: 'push-management' }">Push Manangement</RouterLink> | 
-        <RouterLink :to="{ name: 'push-noti' }">Push Notification</RouterLink> |
+        <!-- <RouterLink :to="{ name: 'push-noti' }">Push Notification</RouterLink> | -->
         <RouterLink :to="{ name: 'approval' }">Manage Approval</RouterLink>
       </nav>
     </div>

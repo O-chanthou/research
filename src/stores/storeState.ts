@@ -15,7 +15,7 @@ export const usePushStore = defineStore("push", {
   getters: {},
   actions: {
     async fetchAnnounceType() {
-      const res = await fetch("http://localhost:3000/data");
+      const res = await fetch("http://localhost:1001/data");
       this.announceData = await res.json();
       return this.announceData;
     },
@@ -23,7 +23,7 @@ export const usePushStore = defineStore("push", {
     async searchData(formSearch: formSearch) {
       let data: announceData[] = [];
 
-      const res = await fetch("http://localhost:3000/data");
+      const res = await fetch("http://localhost:1001/data");
       data = await res.json();
 
       const search = data.filter((e) => {
@@ -46,7 +46,7 @@ export const usePushStore = defineStore("push", {
 
     /////////// fetch data Manage Approval ///////////////
     async fetchDataApproval() {
-      const res = await fetch('http://localhost:3000/dataApprovalLine')
+      const res = await fetch('http://localhost:8000/dataApprovalLine')
       const data = await res.json();
       this.dataTableApprovalLine = data
     },
