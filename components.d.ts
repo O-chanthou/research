@@ -22,7 +22,7 @@ declare module '@vue/runtime-core' {
     ElSelect: typeof import('element-plus/es')['ElSelect']
     ElTable: typeof import('element-plus/es')['ElTable']
     ElTableColumn: typeof import('element-plus/es')['ElTableColumn']
-    ManageApprovalPage: typeof import('./src/components/approval/ManageApprovalPage.vue')['default']
+    GroupButton: typeof import('./src/components/approval/GroupButton.vue')['default']
     NewApprover: typeof import('./src/components/approval/box-approval/NewApprover.vue')['default']
     Preloader: typeof import('./src/components/modals/Preloader.vue')['default']
     PushDetailsPage: typeof import('./src/components/PushDetailsPage.vue')['default']

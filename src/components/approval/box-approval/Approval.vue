@@ -1,17 +1,16 @@
 <template>
-  {{ getProValue?.approvalList.length }}
   <div class="container">
     <div
       class="form-approval"
-      v-for="(pro, index) in dataApproval?.approvalList"
+      v-for="(pro, index) in approvalList"
     >
       <div class="txt-approval">
         <h3>Approval {{ index+1 }}</h3>
         <div>
-          <el-button :icon="Close" color="red" @click="btnRemoveApproval(dataApproval.approvalList[index].id)" />
+          <el-button disabled :icon="Close" color="red" @click="removeApprovalLine(pro.id)" />
         </div>
       </div>
-
+     
       <el-form
         ref="approvalFormRef"
         :model="approvalForm"
@@ -26,9 +25,10 @@
             :placeholder="
               approvalForm.branchType[index] == ''
                 ? 'Select Branch Type'
-                : getProValue?.approvalList[index].branchType
+                : pro.branchType
             "
             clearable
+            disabled
           >
             <el-option
               v-for="(item, index) in createApprovalData.branchType"
@@ -41,8 +41,9 @@
         <el-form-item label="Role">
           <el-select
             v-model="approvalForm.role[index]"
-            :placeholder="approvalForm.role[index] == '' ? 'Select role' : getProValue?.approvalList[index].role"
+            :placeholder="approvalForm.role[index] == '' ? 'Select role' : pro.role"
             clearable
+            disabled
           >
             <el-option
               v-for="item in createApprovalData.role"
@@ -53,7 +54,7 @@
         </el-form-item>
 
         <el-form-item class="mandatory" label="Mandatory">
-          <el-radio-group v-model="approvalForm.mandatory[index]">
+          <el-radio-group v-model="approvalForm.mandatory[index]" disabled>
             <el-radio label="Yes" />
             <el-radio label="No" />
           </el-radio-group>
@@ -61,41 +62,34 @@
       </el-form>
     </div>
   </div>
-  {{ dataApproval?.approvalList }}
-  {{ dataNewApprover }}
 </template>
 
 <script lang="ts" setup>
-import { reactive, ref, inject } from "vue";
+import { reactive, ref } from "vue";
 import type { FormInstance } from "element-plus";
 import { Close } from "@element-plus/icons-vue";
-import type { Approval } from "@/shared/utils/announce-type";
-import { createApprovalData } from "@/shared/utils/create-approval";
-import type { CreateApprovalData } from "@/shared/utils/approval-interface";
+import { createApprovalData } from "@/shared/utils/approval/create-approval";
+import { usePushStore } from "@/stores/storeState";
+import { storeToRefs } from "pinia";
 
-const getProValue = inject('proValue') as Approval;
-const dataApproval = ref(getProValue)
-const getArrMandatory = inject('arrMandatory') as string[];
-const getNewApprover = inject('proNewApprover') as CreateApprovalData;
-const dataNewApprover = ref(getNewApprover)
+const pushStore = usePushStore()
+const { approvalList, arrMandatory } = storeToRefs(pushStore)
+const { removeApprovalLine } = pushStore
 
 const approvalFormRef = ref<FormInstance>();
-
 const approvalForm = reactive({
   branchType: [] as string[],
   role: [] as string[],
-  mandatory: getArrMandatory
+  mandatory: arrMandatory
 });
-
-const btnRemoveApproval = (id: number) => {
-  dataApproval.value.approvalList = dataApproval.value.approvalList.filter(item => item.id !== id)
-}
 
 </script>
 
 <style scoped>
 .container {
   display: flex;
+  width: 100%;
+  flex-wrap: wrap;
 }
 .form-approval {
   /* height: 35%; */
