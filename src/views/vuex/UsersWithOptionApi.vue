@@ -1,7 +1,7 @@
 <template>
     <div class="wrapper">
       <div class="form-content">
-        <p>Add single user</p>
+        <p>user CRUD using VueX with Option API</p>
         <el-form class="form-container" ref="ruleFormRef" :model="userForm">
           <el-form-item label="First Name">
             <el-input v-model="userForm.firstName" />
@@ -13,9 +13,9 @@
   
           <el-form-item>
             <el-button v-if="!isClick" type="primary" @click="handleAddUser">Add User</el-button>
-            <el-button v-else type="primary" @click="handleUpdate">Update User</el-button>
+            <el-button v-else type="success" @click="handleUpdate">Update User</el-button>
             <el-button v-if="isClick" type="danger" @click="handleRemove"> Remove User </el-button>
-            <el-button v-if="isClick" type="primary" @click="handleClearForm">close</el-button>
+            <el-button v-if="isClick" type="primary" @click="handleClearForm">cancel</el-button>
           </el-form-item>
         </el-form>
       </div>
@@ -42,80 +42,71 @@
   <script lang="ts">
   import { ref } from "vue";
   import { useStore } from "vuex";
-  import { Remove } from "@element-plus/icons-vue";
   import type { User } from "@/stores/modules/users/UsersModule";
   
   export default {
-    setup() {
-      const store = useStore();
-      const isClick = ref(false);
-      const userForm = ref({
-        id: 0,
-        firstName: "",
-        lastName: "",
-      });
-  
-      function handleAddUser() {
-        if (userForm.value.firstName && userForm.value.lastName) {
-          store.dispatch("UsersModule/addUser", userForm.value);
-          userForm.value.firstName = "";
-          userForm.value.lastName = "";
-        } else {
-          alert("Please input First Name and Last Name");
-        }
-      }
-  
-      function handleRemove() {
-        store.dispatch("UsersModule/removeUse", userForm.value.id).then(() => {
-          store.dispatch("UsersModule/fetchUsers");
-          isClick.value = false
-          userForm.value.firstName = ''
-          userForm.value.lastName = ''
-        });
-      }
-  
-      function handleSelect(data: User) {
-        userForm.value.firstName = data.firstName;
-        userForm.value.lastName = data.lastName;
-        userForm.value.id = data.id;
-        isClick.value = true;
-      }
-  
-      function handleUpdate() {
-        if (userForm.value.firstName && userForm.value.lastName) {
-          store.dispatch("UsersModule/updateUser", userForm.value).then(() => {
-            store.dispatch("UsersModule/fetchUsers");
-            userForm.value.firstName = "";
-            userForm.value.lastName = "";
-            isClick.value = false;
-          });
-        } else {
-          alert("Please input First Name and Last Name");
-        }
-      }
-  
-      function handleClearForm() {
-        userForm.value.firstName = "";
-        userForm.value.lastName = "";
-        isClick.value = false;
-      }
-  
-      store.dispatch("UsersModule/fetchUsers");
-      store.getters["UsersModule/getUsers"];
-  
+    components: { },
+
+    data() {
       return {
-        store,
-        userForm,
-        handleAddUser,
-        handleRemove,
-        handleSelect,
-        handleUpdate,
-        handleClearForm,
-        isClick,
-      };
+        store: useStore(),
+        isClick: false,
+        userForm: {
+          id: 0,
+          firstName: "",
+          lastName: "",
+        }
+      }
     },
-  
-    components: { Remove },
+
+    methods: {
+      handleAddUser() {
+        this.$store.dispatch("UsersModule/addUser", this.userForm)
+      },
+
+      handleSelect(user: User) {
+        console.log(user);
+        this.userForm.id = user.id
+        this.userForm.firstName = user.firstName
+        this.userForm.lastName = user.lastName
+        this.isClick = true
+      },
+
+      handleUpdate() {
+        if (this.userForm.firstName && this.userForm.lastName) {
+          this.$store.dispatch("UsersModule/updateUser", this.userForm).then(() => {
+          this.$store.dispatch("UsersModule/fetchUsers");
+          this.userForm.firstName = "";
+          this.userForm.lastName = "";
+          this. isClick = false;
+        });
+      } else {
+        alert("Please input First Name and Last Name");
+      }
+      },
+
+      handleRemove() {
+        this.$store.dispatch("UsersModule/removeUse", this.userForm.id).then(() => {
+        this.store.dispatch("UsersModule/fetchUsers");
+        this.isClick = false
+        this.userForm.firstName = ''
+        this.userForm.lastName = ''
+      });
+      },
+
+      handleClearForm() {
+      this.userForm.firstName = "";
+      this.userForm.lastName = "";
+      this.isClick = false;
+      },
+
+    },
+    
+    created() {
+      this.$store.dispatch("UsersModule/fetchUsers");
+      this.$store.getters["UsersModule/getUsers"];
+    },
+    
   };
   </script>
   

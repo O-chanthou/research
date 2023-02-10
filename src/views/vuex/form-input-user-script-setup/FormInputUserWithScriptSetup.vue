@@ -1,6 +1,6 @@
 <template>
   <div class="wrapper">
-    <p>Add multiple users</p>
+    <p>Add multiple users using VueX with Script setup</p>
     <div class="select-box">
       <el-select v-model="selectValue" placeholder="select to add form">
         <el-option
@@ -37,32 +37,68 @@
 
     <br>
 
-    <div class="table-grid" v-if="isHasData" >
+    <div class="table-grid">
       <p>Table users</p>
-      <el-table :data="tableData" style="width: 100%" height="200">
+      <el-table :data="tableData" style="width: 100%" height="300">
         <el-table-column prop="id" label="ID" width="180"/>
         <el-table-column prop="firstName" label="First Name" />
         <el-table-column prop="lastName" label="Last Name" />
+        <el-table-column label="Operations">
+          <template #default="scope">
+            <el-button size="small" @click="handleEdit(scope.$index, scope.row)"
+              >Edit</el-button
+            >
+            <el-button
+              size="small"
+              type="danger"
+              @click="handleDelete(scope.$index, scope.row)"
+              >Delete</el-button
+            >
+          </template>
+        </el-table-column>
       </el-table>
     </div>
+    <DialogUpdateUser :user-form="user" :dialog-form-visible="dialogFormVisible" @close-dialog="closeDialog"/>
+    <DialogDeleteUser :user-form="user" :delete-dialog-visible="centerDialogVisible" @close-delete-dialog="closeDeleteDialog"/>
   </div>
 </template>
 
-<script setup lang="ts">
-import { reactive, ref } from "vue";
+<script lang="ts" setup>
+import { ref, reactive, watchEffect, defineAsyncComponent } from 'vue';
+import { useStore } from 'vuex';
+import DialogDeleteUser from './DialogDeleteUser.vue';
+import type { MultiUsers } from '@/stores/modules/multi-users/MultiUsersModule';
+const DialogUpdateUser = defineAsyncComponent(()=> import('./DialogUpdateUser.vue'))
 
-interface UserForm {
-  id: number;
-  firstName: string;
-  lastName: string;
-}
-
+const store = useStore()
+const dialogFormVisible = ref(false)
+const centerDialogVisible = ref(false)
 const selectValue = ref("");
 let isAddForm = ref(false)
 let isHasData = ref(false)
-const userForm = ref<UserForm[]>([]);
+const userForm = ref<MultiUsers[]>([]);
 let arrID = ref<number[]>([]);
-let tableData = ref<UserForm[]>([])
+let tableData = ref<MultiUsers[]>([])
+
+const user = reactive({
+  id: 0,
+  firstName: '',
+  lastName: ''
+}) as MultiUsers
+
+const handleEdit = (index: number, row: MultiUsers) => {
+  dialogFormVisible.value = true
+  user.id = row.id
+  user.firstName = row.firstName
+  user.lastName = row.lastName
+}
+
+const handleDelete = (index: number, row: MultiUsers) => {
+  centerDialogVisible.value = true
+  user.id = row.id
+  user.firstName = row.firstName
+  user.lastName = row.lastName
+}
 
 const generateTmpForm = () => {
   // userForm.value = []
@@ -74,23 +110,46 @@ const generateTmpForm = () => {
   }
 };
 
-const handleRemoveForm = (key: number) => {
-  const res = userForm.value.filter((e: UserForm, index) => index !== key)
-  const resID = arrID.value.filter((e: number, index) => index !== key)
+const handleRemoveForm = (index: number) => {
+  const res = userForm.value.filter((e: MultiUsers, i) => i !== index)
+  const resID = arrID.value.filter((e: number, i) => i !== index)
   userForm.value = res
   arrID.value = resID
 }
 
 const handleSubmit = () => {
   isAddForm.value = false
-  userForm.value.forEach((user: UserForm, index: number) => {
+  userForm.value.forEach((user: MultiUsers, i: number) => {
 
-    user.id = arrID.value[index]
+    user.id = arrID.value[i]
     tableData.value.push(user)
+    store.dispatch("MultiUsersModule/addMultiUsers", user)
   })
   userForm.value = []
   isHasData.value = true
 }
+
+watchEffect(() => {
+  tableData.value = store.state.MultiUsersModule.multiUsers
+})
+
+const closeDialog = (e: MultiUsers) => {
+  dialogFormVisible.value = false
+
+  if(e.id !== 0) store.dispatch("MultiUsersModule/updateMultiUsers", e).then(()=> fetchData())
+}
+
+const closeDeleteDialog = (e: boolean) => {
+  centerDialogVisible.value = false
+  if (e) store.dispatch("MultiUsersModule/deleteMultiUsers", user.id).then(()=> fetchData())
+  
+}
+
+const fetchData = () => store.dispatch("MultiUsersModule/fetchMultiUsers")
+const getData = () => store.getters["MultiUsersModule/getMultiUsers"]
+
+fetchData()
+getData()
 
 </script>
 

@@ -1,14 +1,18 @@
 <template>
   <div>
-    <UserCRUD />
-    <FormInputUser/>
+    <UsersWithOptionApi />
+    <hr>
+    <UserCRUDWIthCompositionApi />
+    <hr>
+    <FormInputUserScriptSetup />
   </div>
 </template>
 
 <script setup lang="ts">
 import { defineAsyncComponent } from 'vue';
-const FormInputUser  = defineAsyncComponent(() => import("./FormInputUser.vue"));
-const UserCRUD = defineAsyncComponent(() => import("./UserCRUD.vue"));
+const  UsersWithOptionApi = defineAsyncComponent(() => import("./UsersWithOptionApi.vue"));
+const UserCRUDWIthCompositionApi = defineAsyncComponent(() => import("./UserCRUDWIthCompositionApi.vue"));
+const FormInputUserScriptSetup  = defineAsyncComponent(() => import("@/views/vuex/form-input-user-script-setup/FormInputUserWithScriptSetup.vue"));
 </script>
 
 <style scoped>
