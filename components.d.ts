@@ -12,8 +12,10 @@ declare module '@vue/runtime-core' {
     ApprovalTable: typeof import('./src/components/approval/ApprovalTable.vue')['default']
     BoxApprovalLine: typeof import('./src/components/approval/BoxApprovalLine.vue')['default']
     ElButton: typeof import('element-plus/es')['ElButton']
+    ElDialog: typeof import('element-plus/es')['ElDialog']
     ElForm: typeof import('element-plus/es')['ElForm']
     ElFormItem: typeof import('element-plus/es')['ElFormItem']
+    ElInput: typeof import('element-plus/es')['ElInput']
     ElOption: typeof import('element-plus/es')['ElOption']
     ElRadio: typeof import('element-plus/es')['ElRadio']
     ElRadioGroup: typeof import('element-plus/es')['ElRadioGroup']
@@ -27,5 +29,8 @@ declare module '@vue/runtime-core' {
     PushPage: typeof import('./src/components/PushPage.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
+  }
+  export interface ComponentCustomProperties {
+    vLoading: typeof import('element-plus/es')['ElLoadingDirective']
   }
 }
