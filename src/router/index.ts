@@ -28,6 +28,11 @@ const router = createRouter({
       path: '/manage-approval',
       name: 'approval',
       component: () => import('@/views/manage_approval/ManageApprovalView.vue')
+    },
+    {
+      path: '/vuex',
+      name: 'vuex',
+      component: () => import('@/views/vuex/VuexView.vue')
     }
   ]
 })

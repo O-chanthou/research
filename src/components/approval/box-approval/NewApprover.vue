@@ -37,71 +37,39 @@
           <el-radio label="No" />
         </el-radio-group>
 
-        <el-button @click="btnAdd(newApproverRef)"> Add </el-button>
+        <el-button :disabled="!isModified" @click="btnAdd(newApproverRef)"> Add </el-button>
       </el-form-item>
 
     </el-form>
-    {{ newApproverOvbj }}
   </div>
 </template>
 
 <script lang="ts" setup>
 import { reactive, ref } from "vue";
-import type { FormInstance, FormRules } from "element-plus";
-import { createApprovalData } from "@/shared/utils/create-approval";
-import type { CreateApprovalData } from "@/shared/utils/approval-interface";
+import type { FormInstance } from "element-plus";
+import { rules } from "@/shared/utils/approval/ruleform-newApprover";
+import { createApprovalData } from "@/shared/utils/approval/create-approval.js";
+import type { CreateApprovalData } from "@/shared/utils/approval/approval-interface.js";
+import { usePushStore } from "@/stores/storeState";
+import { storeToRefs } from "pinia";
 
 const newApproverRef = ref<FormInstance>();
-const emits = defineEmits(['emitAddNewApprover'])
-
+const pushStore = usePushStore()
+const { isSelectesTr, isModified } = storeToRefs(pushStore)
+const { addNewApprover } = pushStore
 
 const newApproverForm = reactive<CreateApprovalData>({
   id: 0,
   branchType: "",
   role: "",
-  mandatory: "",
-});
-
-const newApproverOvbj = ref<CreateApprovalData[]>([]);
-
-
-const rules = reactive<FormRules>({
-  branchType: [
-    {
-      required: true,
-      message: "Please select Activity zone",
-      trigger: "change",
-    },
-  ],
-  role: [
-    {
-      required: true,
-      message: "Please select Activity role",
-      trigger: "change",
-    },
-  ],
-  mandatory: [
-    {
-      required: true,
-      message: "Please select activity resource",
-      trigger: "change",
-    },
-  ],
+  mandatory: "No",
 });
 
 const btnAdd = async (formEl: FormInstance | undefined) => {
-  
   if (!formEl) return;
   await formEl.validate((valid, fields) => {
     
     if (valid) {
-      console.log("submit!");
-      if (newApproverForm.mandatory === "Yes") {
-        newApproverForm.mandatory = "1";
-      } else {
-        newApproverForm.mandatory = "0";
-      }
-
       let date = Date()
       let id = Date.parse(date)
 
@@ -115,9 +83,8 @@ const btnAdd = async (formEl: FormInstance | undefined) => {
       tmp.branchType = newApproverForm.branchType;
       tmp.role = newApproverForm.role;
       tmp.mandatory = newApproverForm.mandatory;
-
-      newApproverOvbj.value.push(tmp);
-      emits('emitAddNewApprover', tmp)
+      
+      addNewApprover(tmp)
       formEl.resetFields();
     } else {
       console.log("error submit!", fields);

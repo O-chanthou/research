@@ -1,8 +1,8 @@
 <template>
   <div class="table-grid">
     <el-table
-      :data="dataApprovalLine"
-      height="300"
+      :data="dataTableApprovalLine"
+      height="250"
       :border="true"
       fit
       stripe
@@ -23,62 +23,21 @@
 </template>
 
 <script setup lang="ts">
-import type { Approval } from "@/shared/utils/announce-type.js";
+import type { Approval, CreateApprovalData } from "@/shared/utils/approval/approval-interface";
 import { usePushStore } from "@/stores/storeState";
 import { storeToRefs } from "pinia";
+import { elTableColumns } from "@/shared/utils/announce/announce-type"
 
-const emits = defineEmits<{
-  (event: 'emitTrValue', val: Approval): Approval,
-  (event: 'emitMandatory', val: string[]): string[]
-}>()
+const pushStore = usePushStore() 
+const { dataTableApprovalLine } = storeToRefs(pushStore)
+const { fetchDataApproval, getTrData, getMandatory } = pushStore
 
-const pushStore = usePushStore()
+fetchDataApproval()
 
-pushStore.fetchDataApproval()
-
-const { dataApprovalLine } = storeToRefs(pushStore)
-
-const elTableColumns = [
-  {
-    prop: "no",
-    label: "No",
-    width: 50,
-    align: "center",
-  },
-  {
-    prop: "busCate",
-    label: "Business Category",
-    width: 140,
-    align: "center",
-  },
-  {
-    prop: "busSubCate",
-    label: "Business Sub Category",
-    width: 200,
-    align: "center",
-  },
-  {
-    prop: "authType",
-    label: "Authority Type",
-    // width: 280,
-    align: "center",
-  },
-  {
-    prop: "approvalSteps",
-    label: "Approval Steps",
-    width: 110,
-    align: "center",
-  },
-  {
-    prop: "approvalLine",
-    label: "Approval Line",
-    // width: 180,
-    align: "center",
-  },
-];
-
-function handleCurrentChange(val: Approval) {
+function handleCurrentChange(val: Approval) { 
   let arrMandatory = [] as string[];
+  let arrApprovalLine = [] as CreateApprovalData[];
+
   val.approvalList.forEach(item => {
     if (item.mandatory === 1) {
       arrMandatory.push('Yes')
@@ -86,9 +45,13 @@ function handleCurrentChange(val: Approval) {
       arrMandatory.push('No')
     }
   })
-
-  emits('emitTrValue', val)
-  emits("emitMandatory", arrMandatory)
+  
+  val.approvalList.forEach(item => {
+    arrApprovalLine.push(item);
+  })
+  
+  getTrData(arrApprovalLine)
+  getMandatory(arrMandatory)
 };
 
 </script>

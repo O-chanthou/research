@@ -1,33 +1,29 @@
 import { defineStore } from "pinia";
-import type { announceData } from "@/shared/utils/announceType.interface";
-import type { Approval } from "@/shared/utils/announce-type";
+import type { announceData, formSearch } from "@/shared/utils/announce/announceType.interface";
+import type { Approval, CreateApprovalData } from "@/shared/utils/approval/approval-interface";
 
-const announceDatas: announceData[] = [];
-const dataApprovalLines: Approval[] = [];
-
-interface formSearch {
-  title: string;
-  announceType: string;
-}
 
 export const usePushStore = defineStore("push", {
   state: () => ({
-    announceData: announceDatas,
-    dataApprovalLine: dataApprovalLines,
+    announceData: [] as announceData[],
+    dataTableApprovalLine: [] as Approval[],
+    approvalList: [] as CreateApprovalData[],
+    arrMandatory: [] as (string | number)[],
+    isSelectesTr: false,
+    isModified: false
   }),
-  getters: {
-
-  },
+  getters: {},
   actions: {
     async fetchAnnounceType() {
-      const res = await fetch("http://localhost:3000/data");
+      const res = await fetch("http://localhost:1001/data");
       this.announceData = await res.json();
       return this.announceData;
     },
+
     async searchData(formSearch: formSearch) {
       let data: announceData[] = [];
 
-      const res = await fetch("http://localhost:3000/data");
+      const res = await fetch("http://localhost:1001/data");
       data = await res.json();
 
       const search = data.filter((e) => {
@@ -47,12 +43,30 @@ export const usePushStore = defineStore("push", {
       this.announceData = search
       return this.announceData
     },
+
     /////////// fetch data Manage Approval ///////////////
     async fetchDataApproval() {
-      const res = await fetch('http://localhost:3000/dataApprovalLine')
+      const res = await fetch('http://localhost:8000/dataApprovalLine')
       const data = await res.json();
-      this.dataApprovalLine = data
-      return this.dataApprovalLine
+      this.dataTableApprovalLine = data
+    },
+
+    ////////// get a row data from table
+    getTrData(data: CreateApprovalData[]) {
+      this.isSelectesTr = true
+      this.approvalList = data
+    },
+    getMandatory(data: string[]) {
+      return this.arrMandatory = data
+    },
+
+    ///////// add new approver to approval line
+    addNewApprover(data: CreateApprovalData) {
+      this.arrMandatory.push(data.mandatory)
+      this.approvalList.push(data)
+    },
+    removeApprovalLine(id: number) {
+      this.approvalList = this.approvalList.filter(item => item.id !== id)
     }
   },
 });
